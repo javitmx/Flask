@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Tareas</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <style>
+      .completed-task {
+        text-decoration: line-through; /* Tacha las tareas completadas */
+        color: #6c757d; /* Cambia el color de las tareas completadas */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="mb-4">Lista de Tareas</h1>
+      <form method="POST" action="{{ url_for('index') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+          {{ form.task.label }} {{ form.task(class="form-control") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Agregar</button>
+      </form>
+      <ul class="list-group mt-3">
+        {% for task in tasks %}
+        <li
+          class="list-group-item {% if task.completed %}completed-task{% endif %}"
+        >
+          {{ task.name }} {% if not task.completed %}
+          <form
+            method="POST"
+            action="{{ url_for('complete', task=task.name) }}"
+            class="float-right"
+          >
+            <button type="submit" class="btn btn-success btn-sm">
+              Completada
+            </button>
+          </form>
+          {% endif %}
+          <form
+            method="POST"
+            action="{{ url_for('delete', task=task.name) }}"
+            class="float-right mr-2"
+          >
+            <button type="submit" class="btn btn-danger btn-sm">
+              Eliminar
+            </button>
+          </form>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </body>
+</html>
